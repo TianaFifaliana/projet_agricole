@@ -1,8 +1,9 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,9 +24,9 @@ class JournalAudit extends Model
 {
     use HasFactory;
 
-    protected $table = 'journal_audits';
+    protected \ = 'journal_audits';
 
-    public $timestamps = false;
+    public \ = false;
 
     /**
      * @return array<string, string>
@@ -41,11 +42,25 @@ class JournalAudit extends Model
 
     public function exploitation(): BelongsTo
     {
-        return $this->belongsTo(Exploitation::class);
+        return \->belongsTo(Exploitation::class);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return \->belongsTo(User::class);
+    }
+
+    public function scopeParEntite(Builder \, string \, ?int \ = null): Builder
+    {
+        \->where('entite', \);
+        if (\ !== null) {
+            \->where('entite_id', \);
+        }
+        return \;
+    }
+
+    public function scopeRecent(Builder \, int \ = 50): Builder
+    {
+        return \->orderByDesc('created_at')->limit(\);
     }
 }

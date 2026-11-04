@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -17,6 +17,7 @@ return new class extends Migration
             $table->decimal('rendement_cible_tha', 8, 2)->nullable();
             $table->boolean('actif')->default(true);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['exploitation_id', 'nom']);
         });

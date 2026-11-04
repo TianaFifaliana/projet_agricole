@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
@@ -20,7 +20,7 @@ class LigneVente extends Model
 {
     use HasFactory;
 
-    protected $table = 'lignes_vente';
+    protected \ = 'lignes_vente';
 
     /**
      * @return array<string, string>
@@ -36,11 +36,11 @@ class LigneVente extends Model
 
     public function vente(): BelongsTo
     {
-        return $this->belongsTo(Vente::class);
+        return \->belongsTo(Vente::class);
     }
 
     public function lotStock(): BelongsTo
     {
-        return $this->belongsTo(LotStock::class);
+        return \->belongsTo(LotStock::class);
     }
 }

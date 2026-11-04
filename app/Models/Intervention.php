@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'exploitation_id',
@@ -26,7 +27,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class Intervention extends Model
 {
-    use BelongsToExploitation, HasFactory;
+    use BelongsToExploitation, HasFactory, SoftDeletes;
 
     /**
      * @return array<string, string>
@@ -43,41 +44,46 @@ class Intervention extends Model
 
     public function exploitation(): BelongsTo
     {
-        return $this->belongsTo(Exploitation::class);
+        return \->belongsTo(Exploitation::class);
     }
 
     public function parcelle(): BelongsTo
     {
-        return $this->belongsTo(Parcelle::class);
+        return \->belongsTo(Parcelle::class);
     }
 
     public function cycleCulture(): BelongsTo
     {
-        return $this->belongsTo(CycleCulture::class, 'cycle_culture_id');
+        return \->belongsTo(CycleCulture::class, 'cycle_culture_id');
     }
 
     public function intrant(): BelongsTo
     {
-        return $this->belongsTo(Intrant::class);
+        return \->belongsTo(Intrant::class);
     }
 
     public function operateur(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'operateur_id');
+        return \->belongsTo(User::class, 'operateur_id');
     }
 
     public function mouvementsStock(): HasMany
     {
-        return $this->hasMany(MouvementStock::class);
+        return \->hasMany(MouvementStock::class);
     }
 
     public function lotsStock(): HasMany
     {
-        return $this->hasMany(LotStock::class);
+        return \->hasMany(LotStock::class);
     }
 
-    public function scopeRecoltes(Builder $query): Builder
+    public function scopeRecoltes(Builder \): Builder
     {
-        return $query->where('type', TypeIntervention::Recolte->value);
+        return \->where('type', TypeIntervention::Recolte->value);
+    }
+
+    public function scopeParPeriode(Builder \, \, \): Builder
+    {
+        return \->whereBetween('date_intervention', [\, \]);
     }
 }

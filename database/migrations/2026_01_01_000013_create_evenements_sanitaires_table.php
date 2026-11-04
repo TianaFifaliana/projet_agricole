@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -12,17 +12,21 @@ return new class extends Migration
             $table->id();
             $table->foreignId('exploitation_id')->constrained()->cascadeOnDelete();
             $table->foreignId('animal_id')->constrained('animaux')->cascadeOnDelete();
+            $table->foreignId('intervention_id')->nullable()->constrained()->nullOnDelete();
             $table->string('type', 30);
             $table->date('date_evenement');
-            $table->string('produit', 100)->nullable();
-            $table->string('dose', 50)->nullable();
-            $table->string('veterinaire', 100)->nullable();
-            $table->date('date_fin_carence')->nullable();
-            $table->decimal('cout', 10, 2)->nullable();
-            $table->text('notes')->nullable();
+            $table->string('diagnostic')->nullable();
+            $table->text('traitement')->nullable();
+            $table->string('medicament')->nullable();
+            $table->decimal('cout', 12, 2)->nullable();
+            $table->date('date_rappel')->nullable();
+            $table->text('observations')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['exploitation_id', 'date_evenement']);
+            $table->index(['animal_id', 'date_evenement']);
+            $table->check('cout IS NULL OR cout >= 0');
         });
     }
 

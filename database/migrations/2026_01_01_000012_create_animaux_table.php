@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,8 +22,11 @@ return new class extends Migration
             $table->date('date_entree');
             $table->date('date_sortie')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['exploitation_id', 'identifiant']);
+            $table->index(['exploitation_id', 'statut']);
+            $table->check('poids_kg IS NULL OR poids_kg >= 0');
         });
     }
 

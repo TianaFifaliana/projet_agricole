@@ -1,14 +1,16 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
 use App\Enums\StatutCycleCulture;
 use App\Models\Concerns\BelongsToExploitation;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'exploitation_id',
@@ -26,9 +28,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class CycleCulture extends Model
 {
-    use BelongsToExploitation, HasFactory;
+    use BelongsToExploitation, HasFactory, SoftDeletes;
 
-    protected $table = 'cycles_culturaux';
+    protected \ = 'cycles_culturaux';
 
     /**
      * @return array<string, string>
@@ -48,31 +50,41 @@ class CycleCulture extends Model
 
     public function exploitation(): BelongsTo
     {
-        return $this->belongsTo(Exploitation::class);
+        return \->belongsTo(Exploitation::class);
     }
 
     public function parcelle(): BelongsTo
     {
-        return $this->belongsTo(Parcelle::class);
+        return \->belongsTo(Parcelle::class);
     }
 
     public function culture(): BelongsTo
     {
-        return $this->belongsTo(Culture::class);
+        return \->belongsTo(Culture::class);
     }
 
     public function interventions(): HasMany
     {
-        return $this->hasMany(Intervention::class);
+        return \->hasMany(Intervention::class);
     }
 
     public function lotsStock(): HasMany
     {
-        return $this->hasMany(LotStock::class);
+        return \->hasMany(LotStock::class);
+    }
+
+    public function scopeParCampagne(Builder \, string \): Builder
+    {
+        return \->where('campagne', \);
+    }
+
+    public function scopeEnCours(Builder \): Builder
+    {
+        return \->where('statut', StatutCycleCulture::EnCours->value);
     }
 
     public function estRecolte(): bool
     {
-        return in_array($this->statut, [StatutCycleCulture::Recolte, StatutCycleCulture::Cloture], true);
+        return in_array(\->statut, [StatutCycleCulture::Recolte, StatutCycleCulture::Cloture], true);
     }
 }

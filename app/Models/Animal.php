@@ -1,13 +1,15 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
 use App\Models\Concerns\BelongsToExploitation;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'exploitation_id',
@@ -24,9 +26,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class Animal extends Model
 {
-    use BelongsToExploitation, HasFactory;
+    use BelongsToExploitation, HasFactory, SoftDeletes;
 
-    protected $table = 'animaux';
+    protected \ = 'animaux';
 
     /**
      * @return array<string, string>
@@ -43,11 +45,16 @@ class Animal extends Model
 
     public function exploitation(): BelongsTo
     {
-        return $this->belongsTo(Exploitation::class);
+        return \->belongsTo(Exploitation::class);
     }
 
     public function evenementsSanitaires(): HasMany
     {
-        return $this->hasMany(EvenementSanitaire::class);
+        return \->hasMany(EvenementSanitaire::class);
+    }
+
+    public function scopeActifs(Builder \): Builder
+    {
+        return \->where('statut', 'actif');
     }
 }

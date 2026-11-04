@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -18,8 +18,11 @@ return new class extends Migration
             $table->decimal('prix_unitaire', 12, 2)->nullable();
             $table->boolean('actif')->default(true);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['exploitation_id', 'nom']);
+            $table->index(['exploitation_id', 'categorie']);
+            $table->check('seuil_alerte >= 0');
         });
     }
 

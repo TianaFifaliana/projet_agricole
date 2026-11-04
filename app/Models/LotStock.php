@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'exploitation_id',
@@ -29,9 +30,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class LotStock extends Model
 {
-    use BelongsToExploitation, HasFactory;
+    use BelongsToExploitation, HasFactory, SoftDeletes;
 
-    protected $table = 'lots_stock';
+    protected \ = 'lots_stock';
 
     /**
      * @return array<string, string>
@@ -50,48 +51,53 @@ class LotStock extends Model
 
     public function exploitation(): BelongsTo
     {
-        return $this->belongsTo(Exploitation::class);
+        return \->belongsTo(Exploitation::class);
     }
 
     public function intrant(): BelongsTo
     {
-        return $this->belongsTo(Intrant::class);
+        return \->belongsTo(Intrant::class);
     }
 
     public function parcelle(): BelongsTo
     {
-        return $this->belongsTo(Parcelle::class);
+        return \->belongsTo(Parcelle::class);
     }
 
     public function cycleCulture(): BelongsTo
     {
-        return $this->belongsTo(CycleCulture::class, 'cycle_culture_id');
+        return \->belongsTo(CycleCulture::class, 'cycle_culture_id');
     }
 
     public function intervention(): BelongsTo
     {
-        return $this->belongsTo(Intervention::class);
+        return \->belongsTo(Intervention::class);
     }
 
     public function mouvementsStock(): HasMany
     {
-        return $this->hasMany(MouvementStock::class);
+        return \->hasMany(MouvementStock::class);
     }
 
     public function lignesVente(): HasMany
     {
-        return $this->hasMany(LigneVente::class);
+        return \->hasMany(LigneVente::class);
     }
 
-    public function scopeDisponibles(Builder $query): Builder
+    public function scopeDisponibles(Builder \): Builder
     {
-        return $query
+        return \
             ->where('statut', StatutLotStock::Disponible->value)
             ->where('quantite_restante', '>', 0);
     }
 
+    public function scopePerimes(Builder \): Builder
+    {
+        return \->whereNotNull('date_peremption')->whereDate('date_peremption', '<', now());
+    }
+
     public function estDisponible(): bool
     {
-        return $this->statut === StatutLotStock::Disponible && (float) $this->quantite_restante > 0;
+        return \->statut === StatutLotStock::Disponible && (float) \->quantite_restante > 0;
     }
 }

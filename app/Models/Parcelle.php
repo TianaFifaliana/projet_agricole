@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
     'exploitation_id',
@@ -21,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 ])]
 class Parcelle extends Model
 {
-    use BelongsToExploitation, HasFactory;
+    use BelongsToExploitation, HasFactory, SoftDeletes;
 
     /**
      * @return array<string, string>
@@ -38,21 +39,26 @@ class Parcelle extends Model
 
     public function exploitation(): BelongsTo
     {
-        return $this->belongsTo(Exploitation::class);
+        return \->belongsTo(Exploitation::class);
     }
 
     public function cyclesCulturaux(): HasMany
     {
-        return $this->hasMany(CycleCulture::class);
+        return \->hasMany(CycleCulture::class);
     }
 
     public function interventions(): HasMany
     {
-        return $this->hasMany(Intervention::class);
+        return \->hasMany(Intervention::class);
     }
 
     public function lotsStock(): HasMany
     {
-        return $this->hasMany(LotStock::class);
+        return \->hasMany(LotStock::class);
+    }
+
+    public function scopeActives(\)
+    {
+        return \->where('actif', true);
     }
 }

@@ -1,10 +1,11 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
 use App\Enums\TypeMouvementStock;
 use App\Models\Concerns\BelongsToExploitation;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,7 +28,7 @@ class MouvementStock extends Model
 {
     use BelongsToExploitation, HasFactory;
 
-    protected $table = 'mouvements_stock';
+    protected \ = 'mouvements_stock';
 
     /**
      * @return array<string, string>
@@ -45,26 +46,41 @@ class MouvementStock extends Model
 
     public function exploitation(): BelongsTo
     {
-        return $this->belongsTo(Exploitation::class);
+        return \->belongsTo(Exploitation::class);
     }
 
     public function lotStock(): BelongsTo
     {
-        return $this->belongsTo(LotStock::class);
+        return \->belongsTo(LotStock::class);
     }
 
     public function vente(): BelongsTo
     {
-        return $this->belongsTo(Vente::class);
+        return \->belongsTo(Vente::class);
     }
 
     public function intervention(): BelongsTo
     {
-        return $this->belongsTo(Intervention::class);
+        return \->belongsTo(Intervention::class);
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return \->belongsTo(User::class);
+    }
+
+    public function scopeEntrees(Builder \): Builder
+    {
+        return \->where('type', TypeMouvementStock::Entree->value);
+    }
+
+    public function scopeSorties(Builder \): Builder
+    {
+        return \->where('type', TypeMouvementStock::Sortie->value);
+    }
+
+    public function scopeParPeriode(Builder \, \, \): Builder
+    {
+        return \->whereBetween('date_mouvement', [\, \]);
     }
 }

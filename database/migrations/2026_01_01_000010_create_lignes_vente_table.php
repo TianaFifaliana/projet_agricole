@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -20,6 +20,9 @@ return new class extends Migration
             $table->timestamps();
 
             $table->index('lot_stock_id');
+            $table->check('quantite > 0');
+            $table->check('prix_unitaire >= 0');
+            $table->check('montant >= 0');
         });
     }
 

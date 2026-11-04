@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 namespace App\Models;
 
@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -27,7 +28,7 @@ use Laravel\Sanctum\HasApiTokens;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
 
     /**
      * @return array<string, string>
@@ -44,36 +45,51 @@ class User extends Authenticatable
 
     public function exploitation(): BelongsTo
     {
-        return $this->belongsTo(Exploitation::class);
+        return \->belongsTo(Exploitation::class);
     }
 
     public function interventions(): HasMany
     {
-        return $this->hasMany(Intervention::class, 'operateur_id');
+        return \->hasMany(Intervention::class, 'operateur_id');
     }
 
     public function ventes(): HasMany
     {
-        return $this->hasMany(Vente::class);
+        return \->hasMany(Vente::class);
+    }
+
+    public function journalAudits(): HasMany
+    {
+        return \->hasMany(JournalAudit::class);
+    }
+
+    public function mouvementsStock(): HasMany
+    {
+        return \->hasMany(MouvementStock::class);
     }
 
     public function isAdministrateur(): bool
     {
-        return $this->role === UserRole::Administrateur;
+        return \->role === UserRole::Administrateur;
     }
 
     public function isResponsable(): bool
     {
-        return $this->role === UserRole::Responsable;
+        return \->role === UserRole::Responsable;
     }
 
     public function isAgent(): bool
     {
-        return $this->role === UserRole::Agent;
+        return \->role === UserRole::Agent;
     }
 
     public function nomComplet(): string
     {
-        return trim($this->prenom.' '.$this->nom);
+        return trim(\->prenom.' '.\->nom);
+    }
+
+    public function scopeActifs(\)
+    {
+        return \->where('actif', true);
     }
 }

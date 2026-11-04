@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -22,9 +22,13 @@ return new class extends Migration
             $table->decimal('cout', 12, 2)->nullable();
             $table->text('description')->nullable();
             $table->timestamps();
+            $table->softDeletes();
 
             $table->index(['exploitation_id', 'date_intervention']);
             $table->index(['cycle_culture_id', 'type']);
+            $table->index(['type']);
+            $table->check('quantite IS NULL OR quantite >= 0');
+            $table->check('cout IS NULL OR cout >= 0');
         });
     }
 
