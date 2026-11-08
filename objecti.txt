@@ -1,0 +1,6 @@
+Stack : Laravel + PHP, MySQL, avec 8 à 15 tables métier.
+3 rôles : administrateur, responsable, agent.
+Isolation SaaS : chaque exploitation ne voit que ses données, contrôlée côté serveur.
+Technique obligatoire : Service, transaction, gestion de concurrence, Event + Listener, Notification, Job/Queue, Cache avec invalidation, API REST protégée, tests, logs.
+Fonctionnel obligatoire : exploitations, unités, campagnes, activités, intrants, stocks, récoltes, dépenses/recettes (marge), tableau de bord avec 2 indicateurs en plus, recherche/filtres/tri/pagination.
+Livrables : code, README, rapport de 15 à 25 pages, diagramme de données, dépôt Git avec une vraie progression de commits, démo orale.
