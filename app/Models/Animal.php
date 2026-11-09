@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -28,7 +28,7 @@ class Animal extends Model
 {
     use BelongsToExploitation, HasFactory, SoftDeletes;
 
-    protected \ = 'animaux';
+    protected $table = 'animaux';
 
     /**
      * @return array<string, string>
@@ -45,16 +45,16 @@ class Animal extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function evenementsSanitaires(): HasMany
     {
-        return \->hasMany(EvenementSanitaire::class);
+        return $this->hasMany(EvenementSanitaire::class);
     }
 
-    public function scopeActifs(Builder \): Builder
+    public function scopeActifs(Builder $query): Builder
     {
-        return \->where('statut', 'actif');
+        return $query->where('statut', 'actif');
     }
 }

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -41,26 +41,26 @@ class Partenaire extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function ventes(): HasMany
     {
-        return \->hasMany(Vente::class);
+        return $this->hasMany(Vente::class);
     }
 
-    public function scopeActifs(Builder \): Builder
+    public function scopeActifs(Builder $query): Builder
     {
-        return \->where('actif', true);
+        return $query->where('actif', true);
     }
 
-    public function scopeClients(Builder \): Builder
+    public function scopeClients(Builder $query): Builder
     {
-        return \->where('type', 'client');
+        return $query->where('type', 'client');
     }
 
-    public function scopeFournisseurs(Builder \): Builder
+    public function scopeFournisseurs(Builder $query): Builder
     {
-        return \->where('type', 'fournisseur');
+        return $query->where('type', 'fournisseur');
     }
 }

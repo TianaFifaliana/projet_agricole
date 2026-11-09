@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -28,7 +28,6 @@ return new class extends Migration
             $table->index(['exploitation_id', 'campagne']);
             $table->index(['parcelle_id', 'campagne']);
             $table->index(['statut']);
-            $table->check('surface_ha >= 0');
         });
     }
 

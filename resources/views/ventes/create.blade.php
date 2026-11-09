@@ -71,13 +71,16 @@
     </form>
 
     <script>
-        const lotsDisponibles = @json($lots->map(fn ($lot) => [
-            'id' => $lot->id,
-            'code' => $lot->code_lot,
-            'designation' => $lot->intrant?->nom ?? 'Récolte '.$lot->code_lot,
-            'unite' => $lot->unite,
-            'prix' => $lot->prix_unitaire,
-        ])->values());
+        @php
+            $lotsDisponibles = $lots->map(fn ($lot) => [
+                'id' => $lot->id,
+                'code' => $lot->code_lot,
+                'designation' => $lot->intrant?->nom ?? 'Récolte '.$lot->code_lot,
+                'unite' => $lot->unite,
+                'prix' => $lot->prix_unitaire,
+            ])->values();
+        @endphp
+        const lotsDisponibles = @json($lotsDisponibles);
 
         let indexLigne = 0;
 

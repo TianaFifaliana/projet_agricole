@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -28,10 +28,6 @@ return new class extends Migration
             $table->unique(['exploitation_id', 'numero']);
             $table->index(['exploitation_id', 'date_vente']);
             $table->index(['statut']);
-            $table->check('total_ht >= 0');
-            $table->check('tva >= 0');
-            $table->check('total_ttc >= 0');
-            $table->check('taux_tva >= 0');
         });
     }
 

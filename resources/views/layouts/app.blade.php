@@ -16,6 +16,8 @@
                     <a class="rounded px-2 py-1 hover:bg-slate-100" href="{{ route('parcelles.index') }}">Parcelles</a>
                     <a class="rounded px-2 py-1 hover:bg-slate-100" href="{{ route('cycles.index') }}">Cycles</a>
                     <a class="rounded px-2 py-1 hover:bg-slate-100" href="{{ route('interventions.index') }}">Interventions</a>
+                    <a class="rounded px-2 py-1 hover:bg-slate-100" href="{{ route('irrigations.index') }}">Irrigation</a>
+                    <a class="rounded px-2 py-1 hover:bg-slate-100" href="{{ route('water-budgets.index') }}">Quotas d'eau</a>
                     <a class="rounded px-2 py-1 hover:bg-slate-100" href="{{ route('stocks.index') }}">Stocks</a>
                     <a class="rounded px-2 py-1 hover:bg-slate-100" href="{{ route('ventes.index') }}">Ventes</a>
                     <a class="rounded px-2 py-1 hover:bg-slate-100" href="{{ route('animaux.index') }}">Élevage</a>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -48,46 +48,46 @@ class Vente extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function partenaire(): BelongsTo
     {
-        return \->belongsTo(Partenaire::class);
+        return $this->belongsTo(Partenaire::class);
     }
 
     public function user(): BelongsTo
     {
-        return \->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function lignes(): HasMany
     {
-        return \->hasMany(LigneVente::class);
+        return $this->hasMany(LigneVente::class);
     }
 
     public function mouvementsStock(): HasMany
     {
-        return \->hasMany(MouvementStock::class);
+        return $this->hasMany(MouvementStock::class);
     }
 
-    public function scopeBrouillons(Builder \): Builder
+    public function scopeBrouillons(Builder $query): Builder
     {
-        return \->where('statut', StatutVente::Brouillon->value);
+        return $query->where('statut', StatutVente::Brouillon->value);
     }
 
-    public function scopeValidees(Builder \): Builder
+    public function scopeValidees(Builder $query): Builder
     {
-        return \->where('statut', StatutVente::Validee->value);
+        return $query->where('statut', StatutVente::Validee->value);
     }
 
     public function estBrouillon(): bool
     {
-        return \->statut === StatutVente::Brouillon;
+        return $this->statut === StatutVente::Brouillon;
     }
 
     public function estValidee(): bool
     {
-        return \->statut === StatutVente::Validee;
+        return $this->statut === StatutVente::Validee;
     }
 }

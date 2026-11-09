@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -38,26 +38,31 @@ class Intrant extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function lotsStock(): HasMany
     {
-        return \->hasMany(LotStock::class);
+        return $this->hasMany(LotStock::class);
     }
 
     public function interventions(): HasMany
     {
-        return \->hasMany(Intervention::class);
+        return $this->hasMany(Intervention::class);
     }
 
-    public function scopeActifs(Builder \): Builder
+    public function quantiteDisponible(): float
     {
-        return \->where('actif', true);
+        return (float) $this->lotsStock()->disponibles()->sum('quantite_restante');
     }
 
-    public function scopeParCategorie(Builder \, string \): Builder
+    public function scopeActifs(Builder $query): Builder
     {
-        return \->where('categorie', \);
+        return $query->where('actif', true);
+    }
+
+    public function scopeParCategorie(Builder $query, string $categorie): Builder
+    {
+        return $query->where('categorie', $categorie);
     }
 }

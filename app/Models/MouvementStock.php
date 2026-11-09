@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -28,7 +28,7 @@ class MouvementStock extends Model
 {
     use BelongsToExploitation, HasFactory;
 
-    protected \ = 'mouvements_stock';
+    protected $table = 'mouvements_stock';
 
     /**
      * @return array<string, string>
@@ -46,41 +46,41 @@ class MouvementStock extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function lotStock(): BelongsTo
     {
-        return \->belongsTo(LotStock::class);
+        return $this->belongsTo(LotStock::class);
     }
 
     public function vente(): BelongsTo
     {
-        return \->belongsTo(Vente::class);
+        return $this->belongsTo(Vente::class);
     }
 
     public function intervention(): BelongsTo
     {
-        return \->belongsTo(Intervention::class);
+        return $this->belongsTo(Intervention::class);
     }
 
     public function user(): BelongsTo
     {
-        return \->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function scopeEntrees(Builder \): Builder
+    public function scopeEntrees(Builder $query): Builder
     {
-        return \->where('type', TypeMouvementStock::Entree->value);
+        return $query->where('type', TypeMouvementStock::Entree->value);
     }
 
-    public function scopeSorties(Builder \): Builder
+    public function scopeSorties(Builder $query): Builder
     {
-        return \->where('type', TypeMouvementStock::Sortie->value);
+        return $query->where('type', TypeMouvementStock::Sortie->value);
     }
 
-    public function scopeParPeriode(Builder \, \, \): Builder
+    public function scopeParPeriode(Builder $query, $debut, $fin): Builder
     {
-        return \->whereBetween('date_mouvement', [\, \]);
+        return $query->whereBetween('date_mouvement', [$debut, $fin]);
     }
 }

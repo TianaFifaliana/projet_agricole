@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 #[Fillable([
@@ -30,7 +31,7 @@ class CycleCulture extends Model
 {
     use BelongsToExploitation, HasFactory, SoftDeletes;
 
-    protected \ = 'cycles_culturaux';
+    protected $table = 'cycles_culturaux';
 
     /**
      * @return array<string, string>
@@ -50,41 +51,51 @@ class CycleCulture extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function parcelle(): BelongsTo
     {
-        return \->belongsTo(Parcelle::class);
+        return $this->belongsTo(Parcelle::class);
     }
 
     public function culture(): BelongsTo
     {
-        return \->belongsTo(Culture::class);
+        return $this->belongsTo(Culture::class);
     }
 
     public function interventions(): HasMany
     {
-        return \->hasMany(Intervention::class);
+        return $this->hasMany(Intervention::class);
     }
 
     public function lotsStock(): HasMany
     {
-        return \->hasMany(LotStock::class);
+        return $this->hasMany(LotStock::class);
     }
 
-    public function scopeParCampagne(Builder \, string \): Builder
+    public function waterBudget(): HasOne
     {
-        return \->where('campagne', \);
+        return $this->hasOne(CampaignWaterBudget::class, 'campaign_id');
     }
 
-    public function scopeEnCours(Builder \): Builder
+    public function irrigations(): HasMany
     {
-        return \->where('statut', StatutCycleCulture::EnCours->value);
+        return $this->hasMany(Irrigation::class, 'campaign_id');
+    }
+
+    public function scopeParCampagne(Builder $query, string $campagne): Builder
+    {
+        return $query->where('campagne', $campagne);
+    }
+
+    public function scopeEnCours(Builder $query): Builder
+    {
+        return $query->where('statut', StatutCycleCulture::EnCours->value);
     }
 
     public function estRecolte(): bool
     {
-        return in_array(\->statut, [StatutCycleCulture::Recolte, StatutCycleCulture::Cloture], true);
+        return in_array($this->statut, [StatutCycleCulture::Recolte, StatutCycleCulture::Cloture], true);
     }
 }

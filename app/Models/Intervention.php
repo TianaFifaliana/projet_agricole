@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -44,46 +44,46 @@ class Intervention extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function parcelle(): BelongsTo
     {
-        return \->belongsTo(Parcelle::class);
+        return $this->belongsTo(Parcelle::class);
     }
 
     public function cycleCulture(): BelongsTo
     {
-        return \->belongsTo(CycleCulture::class, 'cycle_culture_id');
+        return $this->belongsTo(CycleCulture::class, 'cycle_culture_id');
     }
 
     public function intrant(): BelongsTo
     {
-        return \->belongsTo(Intrant::class);
+        return $this->belongsTo(Intrant::class);
     }
 
     public function operateur(): BelongsTo
     {
-        return \->belongsTo(User::class, 'operateur_id');
+        return $this->belongsTo(User::class, 'operateur_id');
     }
 
     public function mouvementsStock(): HasMany
     {
-        return \->hasMany(MouvementStock::class);
+        return $this->hasMany(MouvementStock::class);
     }
 
     public function lotsStock(): HasMany
     {
-        return \->hasMany(LotStock::class);
+        return $this->hasMany(LotStock::class);
     }
 
-    public function scopeRecoltes(Builder \): Builder
+    public function scopeRecoltes(Builder $query): Builder
     {
-        return \->where('type', TypeIntervention::Recolte->value);
+        return $query->where('type', TypeIntervention::Recolte->value);
     }
 
-    public function scopeParPeriode(Builder \, \, \): Builder
+    public function scopeParPeriode(Builder $query, $debut, $fin): Builder
     {
-        return \->whereBetween('date_intervention', [\, \]);
+        return $query->whereBetween('date_intervention', [$debut, $fin]);
     }
 }

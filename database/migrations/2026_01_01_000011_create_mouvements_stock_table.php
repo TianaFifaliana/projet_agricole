@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -27,7 +27,6 @@ return new class extends Migration
             $table->index(['exploitation_id', 'date_mouvement']);
             $table->index(['lot_stock_id', 'date_mouvement']);
             $table->index(['type']);
-            $table->check('quantite != 0');
         });
     }
 

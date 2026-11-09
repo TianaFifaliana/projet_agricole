@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -27,7 +27,7 @@ class EvenementSanitaire extends Model
 {
     use BelongsToExploitation, HasFactory, SoftDeletes;
 
-    protected \ = 'evenements_sanitaires';
+    protected $table = 'evenements_sanitaires';
 
     /**
      * @return array<string, string>
@@ -43,26 +43,26 @@ class EvenementSanitaire extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function animal(): BelongsTo
     {
-        return \->belongsTo(Animal::class);
+        return $this->belongsTo(Animal::class);
     }
 
     public function intervention(): BelongsTo
     {
-        return \->belongsTo(Intervention::class);
+        return $this->belongsTo(Intervention::class);
     }
 
-    public function scopeAvenir(Builder \): Builder
+    public function scopeAvenir(Builder $query): Builder
     {
-        return \->whereNotNull('date_rappel')->whereDate('date_rappel', '>=', now());
+        return $query->whereNotNull('date_rappel')->whereDate('date_rappel', '>=', now());
     }
 
-    public function scopeParPeriode(Builder \, \, \): Builder
+    public function scopeParPeriode(Builder $query, $debut, $fin): Builder
     {
-        return \->whereBetween('date_evenement', [\, \]);
+        return $query->whereBetween('date_evenement', [$debut, $fin]);
     }
 }

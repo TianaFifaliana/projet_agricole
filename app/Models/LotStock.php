@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -32,7 +32,7 @@ class LotStock extends Model
 {
     use BelongsToExploitation, HasFactory, SoftDeletes;
 
-    protected \ = 'lots_stock';
+    protected $table = 'lots_stock';
 
     /**
      * @return array<string, string>
@@ -51,53 +51,53 @@ class LotStock extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function intrant(): BelongsTo
     {
-        return \->belongsTo(Intrant::class);
+        return $this->belongsTo(Intrant::class);
     }
 
     public function parcelle(): BelongsTo
     {
-        return \->belongsTo(Parcelle::class);
+        return $this->belongsTo(Parcelle::class);
     }
 
     public function cycleCulture(): BelongsTo
     {
-        return \->belongsTo(CycleCulture::class, 'cycle_culture_id');
+        return $this->belongsTo(CycleCulture::class, 'cycle_culture_id');
     }
 
     public function intervention(): BelongsTo
     {
-        return \->belongsTo(Intervention::class);
+        return $this->belongsTo(Intervention::class);
     }
 
     public function mouvementsStock(): HasMany
     {
-        return \->hasMany(MouvementStock::class);
+        return $this->hasMany(MouvementStock::class);
     }
 
     public function lignesVente(): HasMany
     {
-        return \->hasMany(LigneVente::class);
+        return $this->hasMany(LigneVente::class);
     }
 
-    public function scopeDisponibles(Builder \): Builder
+    public function scopeDisponibles(Builder $query): Builder
     {
-        return \
+        return $query
             ->where('statut', StatutLotStock::Disponible->value)
             ->where('quantite_restante', '>', 0);
     }
 
-    public function scopePerimes(Builder \): Builder
+    public function scopePerimes(Builder $query): Builder
     {
-        return \->whereNotNull('date_peremption')->whereDate('date_peremption', '<', now());
+        return $query->whereNotNull('date_peremption')->whereDate('date_peremption', '<', now());
     }
 
     public function estDisponible(): bool
     {
-        return \->statut === StatutLotStock::Disponible && (float) \->quantite_restante > 0;
+        return $this->statut === StatutLotStock::Disponible && (float) $this->quantite_restante > 0;
     }
 }

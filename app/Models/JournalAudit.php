@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -24,9 +24,9 @@ class JournalAudit extends Model
 {
     use HasFactory;
 
-    protected \ = 'journal_audits';
+    protected $table = 'journal_audits';
 
-    public \ = false;
+    public $timestamps = false;
 
     /**
      * @return array<string, string>
@@ -42,25 +42,27 @@ class JournalAudit extends Model
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function user(): BelongsTo
     {
-        return \->belongsTo(User::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function scopeParEntite(Builder \, string \, ?int \ = null): Builder
+    public function scopeParEntite(Builder $query, string $entite, ?int $entiteId = null): Builder
     {
-        \->where('entite', \);
-        if (\ !== null) {
-            \->where('entite_id', \);
+        $query->where('entite', $entite);
+
+        if ($entiteId !== null) {
+            $query->where('entite_id', $entiteId);
         }
-        return \;
+
+        return $query;
     }
 
-    public function scopeRecent(Builder \, int \ = 50): Builder
+    public function scopeRecent(Builder $query, int $limite = 50): Builder
     {
-        return \->orderByDesc('created_at')->limit(\);
+        return $query->orderByDesc('created_at')->limit($limite);
     }
 }

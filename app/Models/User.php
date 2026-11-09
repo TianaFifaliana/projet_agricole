@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 namespace App\Models;
 
@@ -6,6 +6,7 @@ use App\Enums\UserRole;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -45,51 +46,66 @@ class User extends Authenticatable
 
     public function exploitation(): BelongsTo
     {
-        return \->belongsTo(Exploitation::class);
+        return $this->belongsTo(Exploitation::class);
     }
 
     public function interventions(): HasMany
     {
-        return \->hasMany(Intervention::class, 'operateur_id');
+        return $this->hasMany(Intervention::class, 'operateur_id');
     }
 
     public function ventes(): HasMany
     {
-        return \->hasMany(Vente::class);
+        return $this->hasMany(Vente::class);
     }
 
     public function journalAudits(): HasMany
     {
-        return \->hasMany(JournalAudit::class);
+        return $this->hasMany(JournalAudit::class);
     }
 
     public function mouvementsStock(): HasMany
     {
-        return \->hasMany(MouvementStock::class);
+        return $this->hasMany(MouvementStock::class);
+    }
+
+    public function irrigations(): HasMany
+    {
+        return $this->hasMany(Irrigation::class);
+    }
+
+    public function demandesRallongeEau(): HasMany
+    {
+        return $this->hasMany(WaterBudgetAdjustment::class, 'demande_par_id');
+    }
+
+    public function validationsRallongeEau(): HasMany
+    {
+        return $this->hasMany(WaterBudgetAdjustment::class, 'valide_par_id');
     }
 
     public function isAdministrateur(): bool
     {
-        return \->role === UserRole::Administrateur;
+        return $this->role === UserRole::Administrateur;
     }
 
     public function isResponsable(): bool
     {
-        return \->role === UserRole::Responsable;
+        return $this->role === UserRole::Responsable;
     }
 
     public function isAgent(): bool
     {
-        return \->role === UserRole::Agent;
+        return $this->role === UserRole::Agent;
     }
 
     public function nomComplet(): string
     {
-        return trim(\->prenom.' '.\->nom);
+        return trim($this->prenom.' '.$this->nom);
     }
 
-    public function scopeActifs(\)
+    public function scopeActifs(Builder $query): Builder
     {
-        return \->where('actif', true);
+        return $query->where('actif', true);
     }
 }

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -26,7 +26,6 @@ return new class extends Migration
 
             $table->index(['exploitation_id', 'date_evenement']);
             $table->index(['animal_id', 'date_evenement']);
-            $table->check('cout IS NULL OR cout >= 0');
         });
     }
 

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
@@ -31,9 +31,6 @@ return new class extends Migration
             $table->index(['exploitation_id', 'statut']);
             $table->index(['intrant_id', 'statut']);
             $table->index(['date_peremption']);
-            $table->check('quantite_initiale >= 0');
-            $table->check('quantite_restante >= 0');
-            $table->check('prix_unitaire IS NULL OR prix_unitaire >= 0');
         });
     }
 
