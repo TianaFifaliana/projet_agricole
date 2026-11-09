@@ -84,6 +84,11 @@ class CycleCulture extends Model
         return $this->hasMany(Irrigation::class, 'campaign_id');
     }
 
+    public function irrigationReport(): HasOne
+    {
+        return $this->hasOne(IrrigationReport::class, 'campaign_id');
+    }
+
     public function scopeParCampagne(Builder $query, string $campagne): Builder
     {
         return $query->where('campagne', $campagne);

@@ -5,6 +5,8 @@ namespace App\Services;
 use App\Enums\StatutBudgetEau;
 use App\Enums\StatutCycleCulture;
 use App\Enums\StatutRallonge;
+use App\Events\WaterQuotaCritical;
+use App\Events\WaterQuotaExhausted;
 use App\Exceptions\RegleMetierException;
 use App\Exceptions\WaterQuotaExceededException;
 use App\Models\CampaignWaterBudget;
@@ -223,6 +225,8 @@ class WaterBudgetService
             return;
         }
 
+        $ancienStatut = $budget->statut;
+
         $alloue = (float) $budget->volume_alloue_m3;
         $consomme = (float) $budget->volume_consomme_m3;
         $pourcentage = $alloue > 0 ? ($consomme / $alloue) * 100 : 100;
@@ -233,6 +237,20 @@ class WaterBudgetService
             default => StatutBudgetEau::Actif,
         };
 
+        if ($ancienStatut === $statut) {
+            return;
+        }
+
         $budget->forceFill(['statut' => $statut])->save();
+
+        if ($statut === StatutBudgetEau::Epuise) {
+            WaterQuotaExhausted::dispatch($budget);
+
+            return;
+        }
+
+        if ($statut === StatutBudgetEau::Alerte && $ancienStatut === StatutBudgetEau::Actif) {
+            WaterQuotaCritical::dispatch($budget);
+        }
     }
 }

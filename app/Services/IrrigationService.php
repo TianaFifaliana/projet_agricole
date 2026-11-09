@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Enums\StatutBudgetEau;
 use App\Enums\StatutCycleCulture;
+use App\Events\IrrigationRecorded;
 use App\Exceptions\RegleMetierException;
 use App\Exceptions\WaterQuotaExceededException;
 use App\Models\CampaignWaterBudget;
@@ -28,7 +29,7 @@ class IrrigationService
      */
     public function recordIrrigation(array $data, User $user): Irrigation
     {
-        return DB::transaction(function () use ($data, $user): Irrigation {
+        $irrigation = DB::transaction(function () use ($data, $user): Irrigation {
             $campaign = CycleCulture::withoutGlobalScope(ExploitationScope::class)
                 ->whereKey($data['campaign_id'])
                 ->lockForUpdate()
@@ -140,6 +141,10 @@ class IrrigationService
 
             return $irrigation->refresh();
         });
+
+        IrrigationRecorded::dispatch($irrigation);
+
+        return $irrigation;
     }
 
     public function calculerVolume(float $debit, int $dureeMinutes): float

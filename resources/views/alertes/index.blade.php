@@ -28,14 +28,22 @@
             <h2 class="font-semibold">Notifications</h2>
             @forelse ($notifications as $notification)
                 <div class="mt-3 rounded border border-slate-200 px-3 py-2 text-sm">
-                    <p class="font-medium">
-                        {{ $notification->data['intrant'] ?? 'Notification' }}
-                    </p>
-                    <p class="text-slate-600">
-                        Stock : {{ $notification->data['quantite_disponible'] ?? '—' }}
-                        {{ $notification->data['unite'] ?? '' }}
-                        · Seuil : {{ $notification->data['seuil_alerte'] ?? '—' }}
-                    </p>
+                    @if (($notification->data['type'] ?? null) === 'water_quota')
+                        <p class="font-medium">
+                            {{ ($notification->data['niveau'] ?? null) === 'epuise' ? "Quota d'eau épuisé" : "Alerte quota d'eau" }}
+                            — {{ $notification->data['campagne'] ?? 'Campagne' }}
+                        </p>
+                        <p class="text-slate-600">{{ $notification->data['message'] ?? '' }}</p>
+                    @else
+                        <p class="font-medium">
+                            {{ $notification->data['intrant'] ?? 'Notification' }}
+                        </p>
+                        <p class="text-slate-600">
+                            Stock : {{ $notification->data['quantite_disponible'] ?? '—' }}
+                            {{ $notification->data['unite'] ?? '' }}
+                            · Seuil : {{ $notification->data['seuil_alerte'] ?? '—' }}
+                        </p>
+                    @endif
                     <p class="text-xs text-slate-400">{{ $notification->created_at?->diffForHumans() }}</p>
                 </div>
             @empty
