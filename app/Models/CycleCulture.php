@@ -82,6 +82,11 @@ class CycleCulture extends Model
         return $this->hasOne(CampaignWaterBudget::class, 'campaign_id');
     }
 
+    public function waterNeedForecast(): HasOne
+    {
+        return $this->hasOne(WaterNeedForecast::class, 'campaign_id');
+    }
+
     public function irrigations(): HasMany
     {
         return $this->hasMany(Irrigation::class, 'campaign_id');

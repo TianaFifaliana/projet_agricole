@@ -53,6 +53,11 @@ class CampaignWaterBudget extends Model
         return $this->hasMany(WaterBudgetAdjustment::class);
     }
 
+    public function forecast(): HasOne
+    {
+        return $this->hasOne(WaterNeedForecast::class, 'campaign_id', 'campaign_id');
+    }
+
     public function volumeRestant(): float
     {
         return max(0.0, round((float) $this->volume_alloue_m3 - (float) $this->volume_consomme_m3, 2));
