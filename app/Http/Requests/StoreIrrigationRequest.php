@@ -74,15 +74,39 @@ class StoreIrrigationRequest extends FormRequest
                 }
             };
 
-            $rules['duree_minutes'][] = new WaterQuotaRule($campaign, $volume);
+            $rules['duree_minutes'] = [...$rules['duree_minutes'], ...$this->reglesQuota($campaign, $volume)];
         }
 
         return $rules;
     }
 
+    /**
+     * Identifiant de la campagne validée : champ du formulaire par défaut.
+     */
+    protected function campaignId(): int|string|null
+    {
+        return $this->input('campaign_id');
+    }
+
+    /**
+     * Règles de pré-validation du quota d'eau.
+     *
+     * @return array<int, mixed>
+     */
+    protected function reglesQuota(CycleCulture $campaign, float $volume): array
+    {
+        return [new WaterQuotaRule($campaign, $volume)];
+    }
+
     private function campaign(): ?CycleCulture
     {
-        return $this->modele(CycleCulture::class, 'campaign_id');
+        $id = $this->campaignId();
+
+        if (! is_numeric($id)) {
+            return null;
+        }
+
+        return CycleCulture::withoutGlobalScope(ExploitationScope::class)->find((int) $id);
     }
 
     private function parcelle(): ?Parcelle

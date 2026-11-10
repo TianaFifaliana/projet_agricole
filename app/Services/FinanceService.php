@@ -26,6 +26,22 @@ class FinanceService
         );
     }
 
+    /**
+     * Évolution mensuelle des recettes et des dépenses sur une année.
+     *
+     * @return array<string, mixed>
+     */
+    public function evolutionMensuelle(int $exploitationId, ?int $annee = null): array
+    {
+        $annee ??= now()->year;
+
+        return Cache::remember(
+            ExploitationCache::financeEvolutionKey($exploitationId),
+            now()->addMinutes(ExploitationCache::TTL_MINUTES),
+            fn (): array => $this->calculerEvolutionMensuelle($exploitationId, $annee),
+        );
+    }
+
     public function calculerCoutIrrigation(float $volumeM3, int $dureeMinutes): float
     {
         $coutEnergie = $volumeM3 * (float) config('irrigation.cout_energie_par_m3', 0.15);
@@ -90,6 +106,39 @@ class FinanceService
             'depenses' => round($depenses, 2),
             'marge' => $marge,
             'taux_marge' => $recettes > 0 ? round(($marge / $recettes) * 100, 2) : null,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function calculerEvolutionMensuelle(int $exploitationId, int $annee): array
+    {
+        $recettes = array_fill(1, 12, 0.0);
+        $depenses = array_fill(1, 12, 0.0);
+
+        Vente::withoutGlobalScope(ExploitationScope::class)
+            ->where('exploitation_id', $exploitationId)
+            ->where('statut', StatutVente::Validee->value)
+            ->whereYear('date_vente', $annee)
+            ->get(['date_vente', 'total_ht'])
+            ->each(function (Vente $vente) use (&$recettes): void {
+                $recettes[$vente->date_vente->month] += (float) $vente->total_ht;
+            });
+
+        Depense::withoutGlobalScope(ExploitationScope::class)
+            ->where('exploitation_id', $exploitationId)
+            ->whereYear('date', $annee)
+            ->get(['date', 'montant'])
+            ->each(function (Depense $depense) use (&$depenses): void {
+                $depenses[$depense->date->month] += (float) $depense->montant;
+            });
+
+        return [
+            'annee' => $annee,
+            'mois' => ['Janv.', 'Févr.', 'Mars', 'Avr.', 'Mai', 'Juin', 'Juil.', 'Août', 'Sept.', 'Oct.', 'Nov.', 'Déc.'],
+            'recettes' => array_values(array_map(fn (float $montant): float => round($montant, 2), $recettes)),
+            'depenses' => array_values(array_map(fn (float $montant): float => round($montant, 2), $depenses)),
         ];
     }
 }

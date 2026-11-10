@@ -6,6 +6,16 @@ use App\Models\CampaignWaterBudget;
 
 class WaterQuotaExceededException extends RegleMetierException
 {
+    public function status(): int
+    {
+        return 409;
+    }
+
+    public function errorCode(): string
+    {
+        return 'quota_eau_depasse';
+    }
+
     public static function pour(CampaignWaterBudget $budget, float $volumeDemande): self
     {
         return new self(sprintf(

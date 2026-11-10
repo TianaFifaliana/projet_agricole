@@ -27,11 +27,34 @@ class DashboardController extends Controller
 
         abort_if($exploitationId === null, 403, "Aucune exploitation n'est rattachée à votre compte.");
 
+        $statistiques = $dashboard->statistiques($exploitationId);
+        $indicateurs = $dashboard->indicateurs($exploitationId);
+        $evolution = $finance->evolutionMensuelle($exploitationId);
+
         return view('dashboard', [
             'exploitation' => $user->exploitation,
-            'statistiques' => $dashboard->statistiques($exploitationId),
+            'statistiques' => $statistiques,
             'eau' => $dashboard->eau($exploitationId),
+            'indicateurs' => $indicateurs,
+            'activites' => $dashboard->activites($exploitationId),
             'marge' => $finance->marge($exploitationId),
+            'evolution' => $evolution,
+            'charts' => [
+                'quotaEau' => [
+                    'labels' => array_column($indicateurs['campagnes'], 'campagne'),
+                    'alloue' => array_column($indicateurs['campagnes'], 'volume_alloue_m3'),
+                    'consomme' => array_column($indicateurs['campagnes'], 'volume_consomme_m3'),
+                ],
+                'finances' => [
+                    'labels' => $evolution['mois'],
+                    'recettes' => $evolution['recettes'],
+                    'depenses' => $evolution['depenses'],
+                ],
+                'rendement' => [
+                    'labels' => array_column($indicateurs['campagnes'], 'campagne'),
+                    'rendements' => array_column($indicateurs['campagnes'], 'rendement_tha'),
+                ],
+            ],
         ]);
     }
 }

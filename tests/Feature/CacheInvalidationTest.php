@@ -42,7 +42,10 @@ class CacheInvalidationTest extends TestCase
 
         $dashboard->statistiques($exploitationId);
         $dashboard->eau($exploitationId);
+        $dashboard->indicateurs($exploitationId);
+        $dashboard->activites($exploitationId);
         $finance->marge($exploitationId);
+        $finance->evolutionMensuelle($exploitationId);
 
         foreach (ExploitationCache::keys($exploitationId) as $key) {
             $this->assertTrue(Cache::has($key));
