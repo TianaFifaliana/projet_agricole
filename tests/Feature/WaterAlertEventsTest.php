@@ -19,9 +19,9 @@ use App\Models\Parcelle;
 use App\Models\User;
 use App\Models\WaterSource;
 use App\Notifications\WaterQuotaAlertNotification;
-use App\Services\DashboardService;
 use App\Services\IrrigationService;
 use App\Services\WaterBudgetService;
+use App\Support\ExploitationCache;
 use Illuminate\Events\CallQueuedListener;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -127,17 +127,29 @@ class WaterAlertEventsTest extends TestCase
     {
         [$user, $campaign, $parcelle, $source] = $this->contexte();
         $budget = app(WaterBudgetService::class)->allocateBudget($campaign, 100, 80);
-        $cacheKey = DashboardService::cacheKey($user->exploitation_id);
+        $cacheKeys = ExploitationCache::keys($user->exploitation_id);
 
-        Cache::put($cacheKey, ['statistiques' => true], 60);
+        foreach ($cacheKeys as $cacheKey) {
+            Cache::put($cacheKey, ['statistiques' => true], 600);
+        }
+
         app(InvalidateWaterDashboardCache::class)->handleCritical(new WaterQuotaCritical($budget));
-        $this->assertFalse(Cache::has($cacheKey));
+
+        foreach ($cacheKeys as $cacheKey) {
+            $this->assertFalse(Cache::has($cacheKey));
+        }
 
         $irrigation = $this->irrigation($campaign, $parcelle, $source, '2026-05-04', 10);
 
-        Cache::put($cacheKey, ['statistiques' => true], 60);
+        foreach ($cacheKeys as $cacheKey) {
+            Cache::put($cacheKey, ['statistiques' => true], 600);
+        }
+
         app(InvalidateWaterDashboardCache::class)->handleIrrigationRecorded(new IrrigationRecorded($irrigation));
-        $this->assertFalse(Cache::has($cacheKey));
+
+        foreach ($cacheKeys as $cacheKey) {
+            $this->assertFalse(Cache::has($cacheKey));
+        }
     }
 
     public function test_l_alerte_est_journalisee_sur_le_canal_audit(): void
@@ -163,6 +175,43 @@ class WaterAlertEventsTest extends TestCase
             GenerateIrrigationReportJob::class,
             fn (GenerateIrrigationReportJob $job): bool => $job->campaignId === 42,
         );
+    }
+
+    public function test_la_commande_met_le_rapport_d_irrigation_en_file(): void
+    {
+        Queue::fake();
+
+        $this->artisan('irrigation:report', ['campaign' => 42])
+            ->expectsOutput("Le rapport d'irrigation de la campagne #42 a été mis en file d'attente.")
+            ->assertSuccessful();
+
+        Queue::assertPushed(
+            GenerateIrrigationReportJob::class,
+            fn (GenerateIrrigationReportJob $job): bool => $job->campaignId === 42,
+        );
+    }
+
+    public function test_la_commande_refuse_un_identifiant_de_campagne_invalide(): void
+    {
+        Queue::fake();
+
+        $this->artisan('irrigation:report', ['campaign' => 'invalide'])
+            ->expectsOutput("L'identifiant de campagne est invalide.")
+            ->assertFailed();
+
+        Queue::assertNothingPushed();
+    }
+
+    public function test_la_commande_en_mode_sync_genere_le_rapport(): void
+    {
+        [$user, $campaign, $parcelle, $source] = $this->contexte();
+
+        $this->irrigation($campaign, $parcelle, $source, '2026-05-04', 40);
+
+        $this->artisan('irrigation:report', ['campaign' => $campaign->getKey(), '--sync' => true])
+            ->assertSuccessful();
+
+        $this->assertSame(40.0, (float) IrrigationReport::withoutGlobalScopes()->sole()->total_volume_m3);
     }
 
     public function test_le_job_de_rapport_calcule_la_consommation_par_riziere_et_par_semaine(): void

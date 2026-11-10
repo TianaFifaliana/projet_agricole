@@ -2,21 +2,19 @@
 
 namespace App\Services;
 
+use App\Enums\StatutCycleCulture;
+use App\Models\CampaignWaterBudget;
+use App\Models\Scopes\ExploitationScope;
+use App\Support\ExploitationCache;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 
 class DashboardService
 {
-    public const TTL_MINUTES = 10;
-
-    public static function cacheKey(int $exploitationId): string
-    {
-        return "dashboard:exploitation:{$exploitationId}";
-    }
-
     public function invalider(int $exploitationId): void
     {
-        Cache::forget(self::cacheKey($exploitationId));
+        ExploitationCache::invalidate($exploitationId);
     }
 
     /**
@@ -25,16 +23,28 @@ class DashboardService
     public function statistiques(int $exploitationId): array
     {
         return Cache::remember(
-            self::cacheKey($exploitationId),
-            now()->addMinutes(self::TTL_MINUTES),
-            fn (): array => $this->calculer($exploitationId),
+            ExploitationCache::statsKey($exploitationId),
+            now()->addMinutes(ExploitationCache::TTL_MINUTES),
+            fn (): array => $this->calculerStatistiques($exploitationId),
         );
     }
 
     /**
      * @return array<string, mixed>
      */
-    private function calculer(int $exploitationId): array
+    public function eau(int $exploitationId): array
+    {
+        return Cache::remember(
+            ExploitationCache::waterKey($exploitationId),
+            now()->addMinutes(ExploitationCache::TTL_MINUTES),
+            fn (): array => $this->calculerEau($exploitationId),
+        );
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function calculerStatistiques(int $exploitationId): array
     {
         $parcelles = DB::table('parcelles')
             ->where('exploitation_id', $exploitationId)
@@ -110,6 +120,45 @@ class DashboardService
             ])->all(),
             'animaux_actifs' => $animauxActifs,
             'evenements_sanitaires_mois' => $evenementsSanitaires,
+        ];
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function calculerEau(int $exploitationId): array
+    {
+        $budgets = CampaignWaterBudget::withoutGlobalScope(ExploitationScope::class)
+            ->where('exploitation_id', $exploitationId)
+            ->whereHas('campaign', fn (Builder $query): Builder => $query
+                ->withoutGlobalScope(ExploitationScope::class)
+                ->where('statut', StatutCycleCulture::EnCours->value))
+            ->with(['campaign.culture', 'campaign.parcelle'])
+            ->orderBy('campaign_id')
+            ->get();
+
+        $campagnes = $budgets->map(fn (CampaignWaterBudget $budget): array => [
+            'budget_id' => $budget->getKey(),
+            'campaign_id' => $budget->campaign_id,
+            'campagne' => trim(sprintf(
+                '%s %s',
+                $budget->campaign?->culture?->nom ?? '',
+                $budget->campaign?->campagne ?? '',
+            )),
+            'parcelle' => $budget->campaign?->parcelle?->code,
+            'volume_alloue_m3' => (float) $budget->volume_alloue_m3,
+            'volume_consomme_m3' => (float) $budget->volume_consomme_m3,
+            'volume_restant_m3' => $budget->volumeRestant(),
+            'pourcentage_consomme' => $budget->pourcentageConsomme(),
+            'seuil_alerte_pct' => (float) $budget->seuil_alerte_pct,
+            'statut' => $budget->statut->value,
+        ])->all();
+
+        return [
+            'campagnes' => $campagnes,
+            'total_alloue_m3' => round(array_sum(array_column($campagnes, 'volume_alloue_m3')), 2),
+            'total_consomme_m3' => round(array_sum(array_column($campagnes, 'volume_consomme_m3')), 2),
+            'total_restant_m3' => round(array_sum(array_column($campagnes, 'volume_restant_m3')), 2),
         ];
     }
 }

@@ -4,13 +4,16 @@ namespace App\Models;
 
 use App\Enums\CategorieDepense;
 use App\Models\Concerns\BelongsToExploitation;
+use App\Observers\DepenseObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy(DepenseObserver::class)]
 #[Fillable([
     'exploitation_id',
     'irrigation_id',

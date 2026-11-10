@@ -3,13 +3,29 @@
 namespace App\Services;
 
 use App\Enums\CategorieDepense;
+use App\Enums\StatutVente;
 use App\Models\Depense;
 use App\Models\Irrigation;
 use App\Models\Scopes\ExploitationScope;
 use App\Models\User;
+use App\Models\Vente;
+use App\Support\ExploitationCache;
+use Illuminate\Support\Facades\Cache;
 
 class FinanceService
 {
+    /**
+     * @return array<string, float|null>
+     */
+    public function marge(int $exploitationId): array
+    {
+        return Cache::remember(
+            ExploitationCache::financeMarginKey($exploitationId),
+            now()->addMinutes(ExploitationCache::TTL_MINUTES),
+            fn (): array => $this->calculerMarge($exploitationId),
+        );
+    }
+
     public function calculerCoutIrrigation(float $volumeM3, int $dureeMinutes): float
     {
         $coutEnergie = $volumeM3 * (float) config('irrigation.cout_energie_par_m3', 0.15);
@@ -51,5 +67,29 @@ class FinanceService
                 number_format($coutMainOeuvre, 2, ',', ' '),
             ),
         ]);
+    }
+
+    /**
+     * @return array<string, float|null>
+     */
+    private function calculerMarge(int $exploitationId): array
+    {
+        $recettes = (float) Vente::withoutGlobalScope(ExploitationScope::class)
+            ->where('exploitation_id', $exploitationId)
+            ->where('statut', StatutVente::Validee->value)
+            ->sum('total_ht');
+
+        $depenses = (float) Depense::withoutGlobalScope(ExploitationScope::class)
+            ->where('exploitation_id', $exploitationId)
+            ->sum('montant');
+
+        $marge = round($recettes - $depenses, 2);
+
+        return [
+            'recettes_ht' => round($recettes, 2),
+            'depenses' => round($depenses, 2),
+            'marge' => $marge,
+            'taux_marge' => $recettes > 0 ? round(($marge / $recettes) * 100, 2) : null,
+        ];
     }
 }

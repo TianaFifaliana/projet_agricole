@@ -4,12 +4,15 @@ namespace App\Models;
 
 use App\Enums\StatutBudgetEau;
 use App\Models\Concerns\BelongsToExploitation;
+use App\Observers\CampaignWaterBudgetObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+#[ObservedBy(CampaignWaterBudgetObserver::class)]
 #[Fillable([
     'exploitation_id',
     'campaign_id',

@@ -4,7 +4,9 @@ namespace App\Models;
 
 use App\Enums\StatutVente;
 use App\Models\Concerns\BelongsToExploitation;
+use App\Observers\VenteObserver;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,6 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+#[ObservedBy(VenteObserver::class)]
 #[Fillable([
     'exploitation_id',
     'partenaire_id',

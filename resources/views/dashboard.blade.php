@@ -33,6 +33,26 @@
         </div>
     </div>
 
+    <div class="mt-6 grid gap-4 sm:grid-cols-2">
+        <div class="rounded-xl border border-slate-200 bg-white p-5">
+            <p class="text-sm text-slate-500">Eau consommée</p>
+            <p class="mt-2 text-3xl font-semibold">{{ number_format($eau['total_consomme_m3'], 2, ',', ' ') }} m³</p>
+            <p class="text-xs text-slate-400">
+                {{ count($eau['campagnes']) }} campagne(s) active(s) ·
+                {{ number_format($eau['total_alloue_m3'], 2, ',', ' ') }} m³ alloués ·
+                {{ number_format($eau['total_restant_m3'], 2, ',', ' ') }} m³ restants
+            </p>
+        </div>
+        <div class="rounded-xl border border-slate-200 bg-white p-5">
+            <p class="text-sm text-slate-500">Marge</p>
+            <p class="mt-2 text-3xl font-semibold">{{ number_format($marge['marge'], 2, ',', ' ') }} €</p>
+            <p class="text-xs text-slate-400">
+                Recettes {{ number_format($marge['recettes_ht'], 2, ',', ' ') }} € HT ·
+                Dépenses {{ number_format($marge['depenses'], 2, ',', ' ') }} €
+            </p>
+        </div>
+    </div>
+
     <div class="mt-8 grid gap-6 lg:grid-cols-2">
         <section class="rounded-xl border border-slate-200 bg-white p-5">
             <div class="flex items-center justify-between">
