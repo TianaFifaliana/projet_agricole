@@ -31,4 +31,13 @@ return [
     ],
     'rendement_reseau_defaut_pct' => (float) env('IRRIGATION_RENDEMENT_RESEAU_PCT', 70),
     'marge_securite_defaut_pct' => (float) env('IRRIGATION_MARGE_SECURITE_PCT', 10),
+
+    /*
+     * Suivi du niveau d'eau dans la rizière : percolation moyenne attendue
+     * (mm/jour infiltrés dans le sol) et tolérance d'écart (mm) au-delà de
+     * laquelle une différence entre le niveau attendu et le niveau constaté
+     * est considérée comme une fuite probable.
+     */
+    'percolation_attendue_mm_jour' => (float) env('IRRIGATION_PERCOLATION_MM_JOUR', 2),
+    'tolerance_ecart_niveau_mm' => (float) env('IRRIGATION_TOLERANCE_ECART_NIVEAU_MM', 15),
 ];

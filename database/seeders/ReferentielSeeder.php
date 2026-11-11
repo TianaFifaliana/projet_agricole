@@ -14,34 +14,40 @@ class ReferentielSeeder extends Seeder
 {
     public function run(): void
     {
-        $tilleuls = Exploitation::where('code', 'EXP-001')->firstOrFail();
-        $val = Exploitation::where('code', 'EXP-002')->firstOrFail();
+        $soavina = Exploitation::where('code', 'EXP-001')->firstOrFail();
+        $anjohory = Exploitation::where('code', 'EXP-002')->firstOrFail();
 
-        $this->creerCultures($tilleuls);
-        $this->creerCultures($val);
+        $this->creerCultures($soavina);
+        $this->creerCultures($anjohory);
 
-        $this->creerIntrants($tilleuls);
-        $this->creerIntrants($val);
+        $this->creerIntrants($soavina);
+        $this->creerIntrants($anjohory);
 
-        $this->creerParcelles($tilleuls);
-        $this->creerParcelles($val);
+        $this->creerParcelles($soavina);
+        $this->creerParcelles($anjohory);
 
-        $this->creerPartenaires($tilleuls);
-        $this->creerPartenaires($val);
+        $this->creerPartenaires($soavina);
+        $this->creerPartenaires($anjohory);
 
-        $this->creerAnimaux($tilleuls);
-        $this->creerAnimaux($val);
+        $this->creerAnimaux($soavina);
+        $this->creerAnimaux($anjohory);
     }
 
     private function creerCultures(Exploitation $exploitation): void
     {
-        $cultures = [
-            ['nom' => 'Blé tendre', 'variete' => 'Apache', 'duree_cycle_jours' => 240, 'rendement_cible_tha' => 7.50],
-            ['nom' => 'Maïs grain', 'variete' => 'Pioneer', 'duree_cycle_jours' => 150, 'rendement_cible_tha' => 10.00],
-            ['nom' => 'Orge', 'variete' => 'Étincel', 'duree_cycle_jours' => 210, 'rendement_cible_tha' => 6.00],
-            ['nom' => 'Colza', 'variete' => 'DK Exsteel', 'duree_cycle_jours' => 280, 'rendement_cible_tha' => 4.00],
-            ['nom' => 'Prairie permanente', 'variete' => null, 'duree_cycle_jours' => 365, 'rendement_cible_tha' => null],
-        ];
+        $cultures = $exploitation->code === 'EXP-001'
+            ? [
+                ['nom' => 'Riz irrigué', 'variete' => 'Soamalandy', 'duree_cycle_jours' => 140, 'rendement_cible_tha' => 5.50],
+                ['nom' => 'Riz irrigué', 'variete' => 'Sekladen', 'duree_cycle_jours' => 120, 'rendement_cible_tha' => 5.00],
+                ['nom' => 'Riz irrigué', 'variete' => 'Fofifa 161', 'duree_cycle_jours' => 135, 'rendement_cible_tha' => 6.00],
+                ['nom' => 'Riz irrigué', 'variete' => 'Rojofotsy', 'duree_cycle_jours' => 110, 'rendement_cible_tha' => 3.50],
+                ['nom' => 'Riz traditionnel', 'variete' => 'Makalioka', 'duree_cycle_jours' => 150, 'rendement_cible_tha' => 2.50],
+            ]
+            : [
+                ['nom' => 'Riz irrigué', 'variete' => 'X265', 'duree_cycle_jours' => 125, 'rendement_cible_tha' => 5.50],
+                ['nom' => 'Riz irrigué', 'variete' => 'BG 90-2', 'duree_cycle_jours' => 130, 'rendement_cible_tha' => 5.20],
+                ['nom' => 'Riz pluvial', 'variete' => 'Rojofotsy', 'duree_cycle_jours' => 110, 'rendement_cible_tha' => 2.50],
+            ];
 
         foreach ($cultures as $culture) {
             Culture::create($culture + [
@@ -53,13 +59,22 @@ class ReferentielSeeder extends Seeder
 
     private function creerIntrants(Exploitation $exploitation): void
     {
-        $intrants = [
-            ['nom' => 'Engrais NPK 15-15-15', 'categorie' => 'engrais', 'unite' => 'kg', 'seuil_alerte' => 500, 'prix_unitaire' => 0.45],
-            ['nom' => 'Semence blé Apache', 'categorie' => 'semence', 'unite' => 'kg', 'seuil_alerte' => 200, 'prix_unitaire' => 0.35],
-            ['nom' => 'Fongicide foliaire', 'categorie' => 'phytosanitaire', 'unite' => 'L', 'seuil_alerte' => 20, 'prix_unitaire' => 18.00],
-            ['nom' => 'Aliment bovin', 'categorie' => 'aliment', 'unite' => 'kg', 'seuil_alerte' => 1000, 'prix_unitaire' => 0.30],
-            ['nom' => 'Gasoil non routier', 'categorie' => 'autre', 'unite' => 'L', 'seuil_alerte' => 100, 'prix_unitaire' => 1.80],
-        ];
+        $intrants = $exploitation->code === 'EXP-001'
+            ? [
+                ['nom' => 'Semence riz Soamalandy certifiée', 'categorie' => 'semence', 'unite' => 'kg', 'seuil_alerte' => 500, 'prix_unitaire' => 3500],
+                ['nom' => 'Engrais NPK 11-22-16', 'categorie' => 'engrais', 'unite' => 'kg', 'seuil_alerte' => 400, 'prix_unitaire' => 4500],
+                ['nom' => 'Urée 46%', 'categorie' => 'engrais', 'unite' => 'kg', 'seuil_alerte' => 300, 'prix_unitaire' => 3800],
+                ['nom' => 'Fumier de zébu décomposé', 'categorie' => 'engrais', 'unite' => 'kg', 'seuil_alerte' => 1500, 'prix_unitaire' => 250],
+                ['nom' => 'Herbicide butachlore', 'categorie' => 'phytosanitaire', 'unite' => 'L', 'seuil_alerte' => 20, 'prix_unitaire' => 48000],
+                ['nom' => 'Gasoil pompe', 'categorie' => 'autre', 'unite' => 'L', 'seuil_alerte' => 100, 'prix_unitaire' => 8500],
+            ]
+            : [
+                ['nom' => 'Semence riz X265 certifiée', 'categorie' => 'semence', 'unite' => 'kg', 'seuil_alerte' => 250, 'prix_unitaire' => 3200],
+                ['nom' => 'Engrais NPK 11-22-16', 'categorie' => 'engrais', 'unite' => 'kg', 'seuil_alerte' => 350, 'prix_unitaire' => 4500],
+                ['nom' => 'Urée 46%', 'categorie' => 'engrais', 'unite' => 'kg', 'seuil_alerte' => 250, 'prix_unitaire' => 3800],
+                ['nom' => 'Fumier de zébu décomposé', 'categorie' => 'engrais', 'unite' => 'kg', 'seuil_alerte' => 1200, 'prix_unitaire' => 250],
+                ['nom' => 'Herbicide 2,4-D', 'categorie' => 'phytosanitaire', 'unite' => 'L', 'seuil_alerte' => 15, 'prix_unitaire' => 42000],
+            ];
 
         foreach ($intrants as $intrant) {
             Intrant::create($intrant + [
@@ -73,14 +88,16 @@ class ReferentielSeeder extends Seeder
     {
         $parcelles = $exploitation->code === 'EXP-001'
             ? [
-                ['code' => 'P-01', 'nom' => 'Les Champs', 'superficie_ha' => 12.50, 'type_sol' => 'limoneux', 'latitude' => 43.6045, 'longitude' => 1.4442],
-                ['code' => 'P-02', 'nom' => 'La Plaine', 'superficie_ha' => 8.00, 'type_sol' => 'argileux', 'latitude' => 43.6100, 'longitude' => 1.4500],
-                ['code' => 'P-03', 'nom' => 'Le Bois', 'superficie_ha' => 6.50, 'type_sol' => 'calcaire', 'latitude' => 43.5980, 'longitude' => 1.4300],
-                ['code' => 'P-04', 'nom' => 'La Source', 'superficie_ha' => 4.00, 'type_sol' => 'sableux', 'latitude' => 43.6200, 'longitude' => 1.4600],
+                ['code' => 'RZ-01', 'nom' => 'Tanety Ambony', 'superficie_ha' => 12.00, 'type_sol' => 'argilo-limoneux', 'latitude' => -17.8281, 'longitude' => 48.4258],
+                ['code' => 'RZ-02', 'nom' => 'Bas-fond Andranakoho', 'superficie_ha' => 9.50, 'type_sol' => 'hydromorphe', 'latitude' => -17.8350, 'longitude' => 48.4310],
+                ['code' => 'RZ-03', 'nom' => 'Plaine de Bevary', 'superficie_ha' => 8.00, 'type_sol' => 'argileux', 'latitude' => -17.8189, 'longitude' => 48.4402],
+                ['code' => 'RZ-04', 'nom' => 'Ambohidroa', 'superficie_ha' => 6.50, 'type_sol' => 'limoneux', 'latitude' => -17.8405, 'longitude' => 48.4177],
+                ['code' => 'RZ-05', 'nom' => 'Antsirakambe Est', 'superficie_ha' => 5.00, 'type_sol' => 'sableux', 'latitude' => -17.8120, 'longitude' => 48.4530],
             ]
             : [
-                ['code' => 'P-01', 'nom' => 'Les Prés', 'superficie_ha' => 10.00, 'type_sol' => 'limoneux', 'latitude' => 43.9280, 'longitude' => 2.1480],
-                ['code' => 'P-02', 'nom' => 'La Colline', 'superficie_ha' => 7.50, 'type_sol' => 'argileux', 'latitude' => 43.9300, 'longitude' => 2.1500],
+                ['code' => 'RZ-01', 'nom' => 'Matiovaina Nord', 'superficie_ha' => 15.00, 'type_sol' => 'argileux', 'latitude' => -16.1105, 'longitude' => 46.6330],
+                ['code' => 'RZ-02', 'nom' => 'Ankilivalu', 'superficie_ha' => 10.00, 'type_sol' => 'limono-argileux', 'latitude' => -16.1180, 'longitude' => 46.6410],
+                ['code' => 'RZ-03', 'nom' => 'Rive Betsiboka', 'superficie_ha' => 6.50, 'type_sol' => 'alluvial', 'latitude' => -16.0995, 'longitude' => 46.6520],
             ];
 
         foreach ($parcelles as $parcelle) {
@@ -93,48 +110,38 @@ class ReferentielSeeder extends Seeder
 
     private function creerPartenaires(Exploitation $exploitation): void
     {
-        Partenaire::create([
-            'exploitation_id' => $exploitation->getKey(),
-            'type' => 'client',
-            'nom' => 'Coopérative Agricole du Sud',
-            'email' => 'achats@coop-sud.test',
-            'telephone' => '05 00 00 00 01',
-            'adresse' => '1 avenue de la Coopérative',
-            'actif' => true,
-        ]);
+        $partenaires = $exploitation->code === 'EXP-001'
+            ? [
+                ['type' => 'client', 'nom' => 'Moulin Rizicole Soatsara', 'email' => 'achats@moulin-soatsara.test', 'telephone' => '034 12 345 01', 'adresse' => 'Quartier Antsirabe Be, Ambatondrazaka'],
+                ['type' => 'fournisseur', 'nom' => 'Appro Mahaleo', 'email' => 'contact@appro-mahaleo.test', 'telephone' => '033 22 145 08', 'adresse' => 'Zone industrielle, Moramanga'],
+                ['type' => 'les_deux', 'nom' => 'Négoce Vary Be Antsirabe', 'email' => 'negoce@varybe-antsirabe.test', 'telephone' => '032 55 901 44', 'adresse' => 'Avenue de l\'Indépendance, Antsirabe'],
+            ]
+            : [
+                ['type' => 'client', 'nom' => 'Meunerie Betsiboka Sud', 'email' => 'commandes@meunerie-betsiboka.test', 'telephone' => '034 90 555 12', 'adresse' => 'Boulevard Mangovanomby, Mahajanga'],
+                ['type' => 'fournisseur', 'nom' => 'Agro-Appro Mitsinjo', 'email' => 'ventes@agroappro-mitsinjo.test', 'telephone' => '033 44 220 76', 'adresse' => 'RN 4, Mitsinjo'],
+                ['type' => 'les_deux', 'nom' => 'Coopérative Vary Itasy', 'email' => 'bureau@vary-itasy.test', 'telephone' => '032 18 660 90', 'adresse' => 'Rue du Marché, Miarinarivo'],
+            ];
 
-        Partenaire::create([
-            'exploitation_id' => $exploitation->getKey(),
-            'type' => 'fournisseur',
-            'nom' => 'Semences & Co',
-            'email' => 'contact@semences-co.test',
-            'telephone' => '05 00 00 00 02',
-            'adresse' => '2 rue des Graines',
-            'actif' => true,
-        ]);
-
-        Partenaire::create([
-            'exploitation_id' => $exploitation->getKey(),
-            'type' => 'les_deux',
-            'nom' => 'Négoce Dupont',
-            'email' => 'contact@negoce-dupont.test',
-            'telephone' => '05 00 00 00 03',
-            'adresse' => '3 place du Marché',
-            'actif' => true,
-        ]);
+        foreach ($partenaires as $partenaire) {
+            Partenaire::create($partenaire + [
+                'exploitation_id' => $exploitation->getKey(),
+                'actif' => true,
+            ]);
+        }
     }
 
     private function creerAnimaux(Exploitation $exploitation): void
     {
         $animaux = $exploitation->code === 'EXP-001'
             ? [
-                ['identifiant' => 'AN-00001', 'nom' => 'Belle', 'espece' => 'bovin', 'race' => 'Charolaise', 'sexe' => 'F', 'poids_kg' => 620],
-                ['identifiant' => 'AN-00002', 'nom' => 'Noisette', 'espece' => 'bovin', 'race' => 'Limousine', 'sexe' => 'F', 'poids_kg' => 580],
-                ['identifiant' => 'AN-00003', 'nom' => 'Tornado', 'espece' => 'bovin', 'race' => 'Charolaise', 'sexe' => 'M', 'poids_kg' => 780],
+                ['identifiant' => 'AN-00001', 'nom' => 'Tsara', 'espece' => 'bovin', 'race' => 'Zébu malgache', 'sexe' => 'F', 'poids_kg' => 420],
+                ['identifiant' => 'AN-00002', 'nom' => 'Vorona', 'espece' => 'bovin', 'race' => 'Zébu malgache', 'sexe' => 'M', 'poids_kg' => 520],
+                ['identifiant' => 'AN-00003', 'nom' => 'Hazo', 'espece' => 'bovin', 'race' => 'Zébu malgache', 'sexe' => 'M', 'poids_kg' => 480],
             ]
             : [
-                ['identifiant' => 'AN-00001', 'nom' => 'Mistral', 'espece' => 'ovin', 'race' => 'Lacaune', 'sexe' => 'M', 'poids_kg' => 75],
-                ['identifiant' => 'AN-00002', 'nom' => 'Flocon', 'espece' => 'ovin', 'race' => 'Lacaune', 'sexe' => 'F', 'poids_kg' => 62],
+                ['identifiant' => 'AN-00001', 'nom' => 'Kely', 'espece' => 'canard', 'race' => 'Khaki Campbell', 'sexe' => 'M', 'poids_kg' => 2.2],
+                ['identifiant' => 'AN-00002', 'nom' => 'Vavy', 'espece' => 'canard', 'race' => 'Khaki Campbell', 'sexe' => 'F', 'poids_kg' => 2.5],
+                ['identifiant' => 'AN-00003', 'nom' => 'Fotsy', 'espece' => 'canard', 'race' => 'Khaki Campbell', 'sexe' => 'F', 'poids_kg' => 2.1],
             ];
 
         foreach ($animaux as $animal) {
