@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             ReferentielSeeder::class,
             ActiviteSeeder::class,
             ElevageSeeder::class,
+            IrrigationSeeder::class,
         ]);
     }
 }

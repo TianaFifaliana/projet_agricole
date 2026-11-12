@@ -24,12 +24,11 @@ class ElevageSeeder extends Seeder
                     'animal_id' => $animal->getKey(),
                     'type' => 'vaccination',
                     'date_evenement' => now()->subDays(20)->toDateString(),
-                    'produit' => 'Vaccin multivalent',
-                    'dose' => '2 ml',
-                    'veterinaire' => 'Dr Lefèvre',
-                    'date_fin_carence' => now()->addDays(10)->toDateString(),
+                    'medicament' => 'Vaccin multivalent',
+                    'traitement' => '2 ml',
+                    'date_rappel' => now()->addDays(10)->toDateString(),
                     'cout' => 45.00,
-                    'notes' => 'Rappel annuel.',
+                    'observations' => 'Dr Lefèvre — Rappel annuel.',
                 ]);
 
                 EvenementSanitaire::create([
@@ -37,12 +36,11 @@ class ElevageSeeder extends Seeder
                     'animal_id' => $animal->getKey(),
                     'type' => 'vermifuge',
                     'date_evenement' => now()->subDays(5)->toDateString(),
-                    'produit' => 'Vermifuge large spectre',
-                    'dose' => '10 ml',
-                    'veterinaire' => null,
-                    'date_fin_carence' => now()->addDays(14)->toDateString(),
+                    'medicament' => 'Vermifuge large spectre',
+                    'traitement' => '10 ml',
+                    'date_rappel' => now()->addDays(14)->toDateString(),
                     'cout' => 18.00,
-                    'notes' => null,
+                    'observations' => null,
                 ]);
             }
         }
